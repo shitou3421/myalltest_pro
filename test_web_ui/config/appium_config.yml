@@ -1,0 +1,32 @@
+host: "127.0.0.1"
+port: "4723"
+caps:
+  - deviceName: "demo"
+  - platformName: "android"
+  - platformVersion: "10"
+#  - udid: "127.0.0.1:7555"
+#  - app: ""
+  - appPackage: "com.xueqiu.android"
+  - appActivity: ".view.WelcomeActivityAlias"
+  - noreset: "True"
+  - dontstopAppOnReset: "True"
+  - skipServerInstallation: "True"
+  - unicodeKeyboard: "True"
+  - resetKeyboard: "True"
+  - newCommandTimeout: "300"
+  - adbExecTimeout: "5000"
+  - uiautomator2ServerLaunchTimeout: "50000"
+  - chromedriverExecutable: ""
+  - chromedriverExecutableDir: ""
+  - chromedriverChromeMappingFile: ""
+
+
+
+
+
+
+
+
+
+
+
