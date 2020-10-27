@@ -17,7 +17,7 @@ from test_web_ui.utils.utils import Utils
 
 
 
-class Base_Page:
+class BasePage:
 
     log = Logger().logger
 

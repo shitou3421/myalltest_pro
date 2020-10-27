@@ -1,0 +1,40 @@
+方式一：手动拉起节点
+1、安装docker
+2、拉取images
+    - docker pull selenium/hub
+    - docker pull selenium/node-chrome
+    - docker pull selenium/node-chrome-debug
+3、运行hub
+    - docker run -d -p 4444:4444 -e GRID_MAX_SESSION=100 --name hub selenium/hub
+4、运行node
+    与hub在同一机器上：
+        - docker run -d -p 5555:5555 -e NODE_MAX_INSTANCES=5 -e NODE_MAX_SESSION=5 --shm-size=2g --link hub:hub --name node1 selenium/node-chrome
+    与hub不在同一机器上：
+        - docker run -d -p port:5555 -e HUB_HOST=192.168.101.38 -e HUB_PORT=4444 -e REMOTE_HOST=http://192.168.101.124:4444 -e NODE_MAX_INSTANCES=5 -e NODE_MAX_SESSION=5 --shm-size=2g  --name node1 selenium/node-chrome
+        - docker run -d -p 5555:5555 -e HUB_HOST=192.168.101.38 -e REMOTE_HOST=http://192.168.101.124:4444 -e NODE_MAX_INSTANCES=5 -e NODE_MAC_SESSION=5 --shm-size=2g --name node2 selenium/node-chrome
+        说明：HUB_HOST为hub的ip， REMOTE_HOST为本地的ip
+
+5、适配脚本
+    caps = {}
+    caps.update({"browserName": "chrome"})
+    driver = webdriver.Remote("http://192.168.101.38:4444/wd/hub", caps)
+
+方式二：docker-compose拉起
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
