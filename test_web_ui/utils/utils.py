@@ -16,7 +16,7 @@ class Utils:
 
     @classmethod
     def read_yaml(cls, path):
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
             return data
 
@@ -27,7 +27,13 @@ if __name__ == '__main__':
         for k, v in info.items():
             if k == "appPackage":
                 print(k, v)
-    # print(Utils.get_proj_path())
+    print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("caps"))
+    print(type(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("caps")))
+    print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("host"))
+    print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("port"))
+    print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("headless"))
+
+
 
 
 

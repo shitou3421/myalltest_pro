@@ -12,48 +12,66 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
 from test_web_ui.utils.mydecorator import rerun_failer_step
-from test_web_ui.utils.mylog import Logger
+# from test_web_ui.utils.mylog import Logger
 from test_web_ui.utils.utils import Utils
 
+# log = Logger().logger
+from test_web_ui.utils.mylog import log
 
 
 class BasePage:
 
-    log = Logger().logger
+    _base_url = ""
 
-    def __init__(self, driver: WebDriver, headless=False):
+    def __init__(self, driver: WebDriver=None):
         '''
         根据设置的环境变量，判断实例化selenium的driver还是appium的driver
         环境变量参数设置为：
             - runtype： web / mobile
             - browser： 当runtype为web时生效，可接受参数chrome / ie / edge / firefox
         '''
-        run_type = os.getenv("runtype", default="web")
-        browser = os.getenv("browser", default="chrome")
-
+        # run_type = str(os.getenv("runtype", default="web"))
+        run_type = "web"
+        log.info(f"run_type: {run_type}")
         if run_type == "web":
+            selenium_config_path = os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")
+            raw_data = Utils.read_yaml(path=selenium_config_path)
+            caps = raw_data.get("caps")
+            host = raw_data.get("host")
+            port = raw_data.get("port")
+            log.info(f"caps: {caps}, host: {host}, port: {port}")
+
             if driver:
                 self.driver = driver
             else:
-                if browser.lower() == "chrome":
-                    options = s_webdriver.ChromeOptions()
-                    if headless:
-                        options.add_argument("--headless")
-                        options.add_argument("window-size=1920×3000")
-                        options.add_argument("--disable-gpu")
-                    self.driver = s_webdriver.Chrome(options=options)
-                elif browser.lower() == "ie":
-                    self.driver = s_webdriver.Ie()
-                elif browser.lower() == "edge":
-                    self.driver = s_webdriver.Edge()
-                elif browser.lower() == "firefox":
-                    self.driver = s_webdriver.Firefox()
-                else:
-                    raise Exception("传入不支持的浏览器，请修改！！！")
+                try:
+                    self.driver = s_webdriver.Remote("http://{host}:{port}/wd/hub".format(host=host, port=port), caps)
+                except:
+                    log.info("初始化driver出错，请检查！！！")
+                    raise RuntimeError("初始化driver出错，请检查！！！")
+
+                self.driver.get(self._base_url)
+                self.driver.implicitly_wait(10)
+                self.driver.maximize_window()
+                # if browser.lower() == "chrome":
+                #     options = s_webdriver.ChromeOptions()
+                #     if headless:
+                #         options.add_argument("--headless")
+                #         options.add_argument("window-size=1920×3000")
+                #         options.add_argument("--disable-gpu")
+                #     self.driver = s_webdriver.Chrome(options=options)
+                # elif browser.lower() == "ie":
+                #     self.driver = s_webdriver.Ie()
+                # elif browser.lower() == "edge":
+                #     self.driver = s_webdriver.Edge()
+                # elif browser.lower() == "firefox":
+                #     self.driver = s_webdriver.Firefox()
+                # else:
+                #     raise Exception("传入不支持的浏览器，请修改！！！")
         elif run_type == "mobile":
             caps = {}
-            path = os.path.join(Utils.get_proj_path(), "config", "appium_config.yml")
-            raw_data = Utils.read_yaml(path=path)
+            appium_config_path = os.path.join(Utils.get_proj_path(), "config", "appium_config.yml")
+            raw_data = Utils.read_yaml(path=appium_config_path)
             host = raw_data.get("host")
             port = raw_data.get("port")
             dic_data = raw_data.get("caps")
@@ -69,13 +87,12 @@ class BasePage:
             if driver is None:
                 for data in dic_data:
                     caps.update(data)
-                self.log.info("启动参数为：host - [{host}], port - [{port}], caps - [{caps}]".format(host=host, port=port, caps=caps))
+                log.info("启动参数为：host - [{host}], port - [{port}], caps - [{caps}]".format(host=host, port=port, caps=caps))
                 try:
                     self.driver = a_webdriver.Remote("http://{host}:{port}/wd/hub".format(host=host, port=port), caps)
-                    self.driver.implicitly_wait(5)
                 except:
                     raise RuntimeError("初始化driver出错，请检查")
-
+                self.driver.implicitly_wait(5)
             else:
                 try:
                     self.driver.start_activity(appPackage, appActivity)
@@ -97,7 +114,7 @@ class BasePage:
         :param massage:
         :return: element
         '''
-        self.log.info(f"当前查找find传入参数：[{locator}] - [{value}] - [{massage}]")
+        log.info(f"当前查找find传入参数： {locator} - {value} - {massage}")
         if isinstance(locator, tuple):
             try:
                 by, val, msg = locator
@@ -121,7 +138,7 @@ class BasePage:
                 allure.attach(pic, name=value, attachment_type=allure.attachment_type.PNG)
         return element
 
-    @rerun_failer_step
+    # @rerun_failer_step
     def finds(self, locator, value=None, massage=None):
         '''
         支持传递的定位方式有：
@@ -134,7 +151,7 @@ class BasePage:
         :param massage:
         :return: elements
         '''
-        self.log.info(f"当前查找finds传入参数：[{locator}] - [{value}] - [{massage}]")
+        log.info(f"当前查找finds传入参数：[{locator}] - [{value}] - [{massage}]")
         if isinstance(locator, tuple):
             try:
                 by, val, msg = locator

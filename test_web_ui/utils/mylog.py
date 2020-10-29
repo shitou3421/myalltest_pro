@@ -35,5 +35,8 @@ class Logger:
         self.logger.addHandler(stream_handler)
         self.logger.addHandler(time_handler)
 
+
+log = Logger().logger
+
 if __name__ == '__main__':
     print(Logger.logfile_path)

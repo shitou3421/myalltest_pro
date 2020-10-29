@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 # author:zhangjie
 # datetime:2020/10/27 12:19
+from selenium.webdriver.remote.webelement import WebElement
 
-
+from .mylog import log
 
 def rerun_failer_step(func):
     '''
@@ -10,14 +11,16 @@ def rerun_failer_step(func):
     '''
     rang_times = 4
     def wapper(*args, **kwargs):
-        for _ in range(rang_times):
+        for i in range(rang_times):
             try:
-                func(*args, **kwargs)
-                break
+                log.info(f"第 {i} 次调用{func}")
+                element = func(*args, **kwargs)
+                if isinstance(element, WebElement):
+                    return element
             except:
                 continue
         else:
-            raise RuntimeError(f"当前重复 {rang_times} 次操作失败，请查看日志处理！！！")
+            raise RuntimeError(f"定位 {rang_times} 次未找到，请检查！！！")
     return wapper
 
 
