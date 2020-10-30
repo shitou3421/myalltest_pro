@@ -20,11 +20,14 @@
     driver = webdriver.Remote("http://192.168.101.38:4444/wd/hub", caps)
 
 方式二：docker-compose拉起
+    本机拉起
+    # 启动
+    # docker-compose -f docker-compose.yml up -d --scale chrome=num   //num是要启动节点的数量
+    # docker-compose -f docker-compose.yml down  关闭
 
 
-
-
-
+    # docker-compose -f docker-compose1.yml up -d 启动
+    # docker-compose -f docker-compose1.yml down
 
 
 

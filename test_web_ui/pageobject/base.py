@@ -2,6 +2,7 @@
 # author:shitou
 # datetime:2020/10/27 9:46
 import os
+from time import sleep
 
 import allure
 from appium import webdriver as a_webdriver
@@ -30,7 +31,7 @@ class BasePage:
             - runtype： web / mobile
             - browser： 当runtype为web时生效，可接受参数chrome / ie / edge / firefox
         '''
-        # run_type = str(os.getenv("runtype", default="web"))
+        # run_type = os.getenv("runtype", default="web")
         run_type = "web"
         log.info(f"run_type: {run_type}")
         if run_type == "web":
@@ -191,7 +192,9 @@ class BasePage:
         elements = self.finds(By.XPATH, xpath)
         return elements
 
-
+    def close(self):
+        sleep(2)
+        self.driver.quit()
 
 
 

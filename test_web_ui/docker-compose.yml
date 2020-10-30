@@ -1,0 +1,48 @@
+version: "3"  # hub node在同一设备上
+services:
+  selenium-hub:
+    image: selenium/hub
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=100
+      - GRID_TIMEOUT=900
+      - START_XVFB=false
+  chrome:
+    image: selenium/node-chrome
+#    image: selenium/node-firefox
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=6
+      - NODE_MAX_SESSION=6
+
+  firefox:
+#    image: selenium/node-chrome
+    image: selenium/node-firefox
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - NODE_MAX_INSTANCES=6
+      - NODE_MAX_SESSION=6
+
+# 启动
+# docker-compose up -d --scale chrome=num   //num是要启动节点的数量
+# docker-compose down  关闭
+
+
+
+
+
+
+
+

@@ -1,18 +1,12 @@
 caps:
-  browserName: "chrome" # suport browser chrome\ie\edge\firefox
+  browserName: "firefox" # suport browser chrome\firefox
   platform: "ANY"
   version: ""
   javascriptEnabled: True
 
 
-headless: False
-
 # hub ——> ip 和 port
 host: "127.0.0.1"
 port: "4444"
-
-
-
-
 
 

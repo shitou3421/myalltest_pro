@@ -1,0 +1,85 @@
+version: "3"
+services:
+  selenium-chrome-node-1:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "5555:5555"
+    restart: always
+    stdin_open: true
+    environment:
+      HUB_HOST: 192.168.101.187
+      HUB_PORT: 4444
+      NODE_MAX_INSTANCES: 5
+      NODE_MAX_SESSION: 5
+      REMOTE_HOST: http://192.168.101.38:5555
+      GRID_TIMEOUT: 60000
+    shm_size: 2gb
+  selenium-chrome-node-2:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "5556:5555"
+    restart: always
+    stdin_open: true
+    environment:
+      HUB_HOST: 192.168.101.187
+      HUB_PORT: 4444
+      NODE_MAX_INSTANCES: 5
+      NODE_MAX_SESSION: 5
+      REMOTE_HOST: http://192.168.101.38:5556
+      GRID_TIMEOUT: 60000
+    shm_size: 2gb
+  selenium-chrome-node-3:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "5557:5555"
+    restart: always
+    stdin_open: true
+    environment:
+      HUB_HOST: 192.168.101.187
+      HUB_PORT: 4444
+      NODE_MAX_INSTANCES: 5
+      NODE_MAX_SESSION: 5
+      REMOTE_HOST: http://192.168.101.38:5557
+      GRID_TIMEOUT: 60000
+    shm_size: 2gb
+  selenium-chrome-node-4:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "5558:5555"
+    restart: always
+    stdin_open: true
+    environment:
+      HUB_HOST: 192.168.101.187
+      HUB_PORT: 4444
+      NODE_MAX_INSTANCES: 5
+      NODE_MAX_SESSION: 5
+      REMOTE_HOST: http://192.168.101.38:5558
+      GRID_TIMEOUT: 60000
+    shm_size: 2gb
+  selenium-chrome-node-5:
+    image: selenium/node-chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "5559:5555"
+    restart: always
+    stdin_open: true
+    environment:
+      HUB_HOST: 192.168.101.187
+      HUB_PORT: 4444
+      NODE_MAX_INSTANCES: 5
+      NODE_MAX_SESSION: 5
+      REMOTE_HOST: http://192.168.101.38:5559
+      GRID_TIMEOUT: 60000
+    shm_size: 2gb
+
+# docker-compose up -d 启动
+# docker-compose down
