@@ -6,6 +6,7 @@ from time import sleep
 
 import allure
 from appium import webdriver as a_webdriver
+from appium.webdriver.common.touch_action import TouchAction
 from selenium import webdriver as s_webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -13,10 +14,8 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
 from test_web_ui.utils.mydecorator import rerun_failer_step
-# from test_web_ui.utils.mylog import Logger
 from test_web_ui.utils.utils import Utils
 
-# log = Logger().logger
 from test_web_ui.utils.mylog import log
 
 
@@ -47,13 +46,12 @@ class BasePage:
             else:
                 try:
                     self.driver = s_webdriver.Remote("http://{host}:{port}/wd/hub".format(host=host, port=port), caps)
+                    self.driver.get(self._base_url)
+                    self.driver.implicitly_wait(10)
+                    self.driver.maximize_window()
                 except:
                     log.info("初始化driver出错，请检查！！！")
                     raise RuntimeError("初始化driver出错，请检查！！！")
-
-                self.driver.get(self._base_url)
-                self.driver.implicitly_wait(10)
-                self.driver.maximize_window()
                 # if browser.lower() == "chrome":
                 #     options = s_webdriver.ChromeOptions()
                 #     if headless:
@@ -76,30 +74,29 @@ class BasePage:
             host = raw_data.get("host")
             port = raw_data.get("port")
             dic_data = raw_data.get("caps")
-            appPackage = ""
-            appActivity = ""
+            self.appPackage = ""
+            self.appActivity = ""
 
-            for k, v in dic_data.items():
-                if k == "appPackage":
-                    appPackage = v
-                if k == "appActivity":
-                    appActivity = v
-
-            if driver is None:
+            for item in dic_data:
+                for k,v in item.items():
+                    if k == "appPackage":
+                        self.appPackage = v
+                    if k == "appActivity":
+                        self.appActivity = v
+            if driver:
+                self.driver = driver
+            else:
                 for data in dic_data:
                     caps.update(data)
                 log.info("启动参数为：host - [{host}], port - [{port}], caps - [{caps}]".format(host=host, port=port, caps=caps))
                 try:
                     self.driver = a_webdriver.Remote("http://{host}:{port}/wd/hub".format(host=host, port=port), caps)
+                    self.driver.implicitly_wait(5)
                 except:
+                    log.info("初始化driver出错，请检查！！！")
                     raise RuntimeError("初始化driver出错，请检查")
-                self.driver.implicitly_wait(5)
-            else:
-                try:
-                    self.driver.start_activity(appPackage, appActivity)
-                except:
-                    raise RuntimeError("跳转主页出错，请检查")
         else:
+            log.info("传入不支持的设备类型，请修改！！！")
             raise Exception("传入不支持的设备类型，请修改！！！")
 
     @rerun_failer_step
@@ -139,7 +136,7 @@ class BasePage:
                 allure.attach(pic, name=value, attachment_type=allure.attachment_type.PNG)
         return element
 
-    # @rerun_failer_step
+    @rerun_failer_step
     def finds(self, locator, value=None, massage=None):
         '''
         支持传递的定位方式有：
@@ -185,10 +182,12 @@ class BasePage:
             WebDriverWait(self.driver, time).until(expected_conditions.element_to_be_clickable((locator, value)))
 
     def find_by_text(self, xpath):
+        '''通过text文本定位查找'''
         element = self.find(By.XPATH, xpath)
         return element
 
     def finds_by_text(self, xpath):
+        '''通过text文本定位查找'''
         elements = self.finds(By.XPATH, xpath)
         return elements
 
@@ -196,13 +195,22 @@ class BasePage:
         sleep(2)
         self.driver.quit()
 
+    def go_start_activity_appium(self):
+        '''appium 跳转到首页'''
+        self.driver.start_activity(self.appPackage, self.appActivity)
 
+    def get_toast_appium(self):
+        '''appium 获取toast'''
+        return self.find(By.XPATH, "//*[@class='android.widget.Toast']").text
 
+    def scroll_screen_appium(self, times):
+        '''appium 滚动屏幕指定次数'''
+        size = self.driver.get_window_size()
 
-
-
-
-
+        for i in range(times):
+            TouchAction(self.driver).long_press(x=size['width']*0.5, y=size['height']*0.8) \
+                .move_to(x=size['width']*0.5, y=size['height']*0.2) \
+                .release().perform()
 
 
 

@@ -18,6 +18,7 @@ def rerun_failer_step(func):
                 if isinstance(element, WebElement):
                     return element
             except:
+                # todo: 异常的处理，弹窗，广告之类
                 continue
         else:
             raise RuntimeError(f"定位 {rang_times} 次未找到，请检查！！！")

@@ -31,7 +31,6 @@ if __name__ == '__main__':
     print(type(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("caps")))
     print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("host"))
     print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("port"))
-    print(Utils.read_yaml(os.path.join(Utils.get_proj_path(), "config", "selenium_config.yml")).get("headless"))
 
 
 
