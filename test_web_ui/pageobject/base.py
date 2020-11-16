@@ -58,13 +58,13 @@ class BasePage:
                 #         options.add_argument("--headless")
                 #         options.add_argument("window-size=1920×3000")
                 #         options.add_argument("--disable-gpu")
-                #     self.driver = s_webdriver.Chrome(options=options)
+                #     self.utils = s_webdriver.Chrome(options=options)
                 # elif browser.lower() == "ie":
-                #     self.driver = s_webdriver.Ie()
+                #     self.utils = s_webdriver.Ie()
                 # elif browser.lower() == "edge":
-                #     self.driver = s_webdriver.Edge()
+                #     self.utils = s_webdriver.Edge()
                 # elif browser.lower() == "firefox":
-                #     self.driver = s_webdriver.Firefox()
+                #     self.utils = s_webdriver.Firefox()
                 # else:
                 #     raise Exception("传入不支持的浏览器，请修改！！！")
         elif run_type == "mobile":
